@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Github Finder | Home Page</title>
+    <style>
+      body{
+        background-color: rgba(0, 0, 0, 0.814);
+        color: white;
+      }
+      li{
+        margin: 10px;
+      }
+      .search-section{
+        display: flex;
+      }
+      input{
+        width: 500px;
+        height: 40px;
+        outline: none;
+        border: 1px solid white;
+        border-radius: 5px 0px 0px 5px;
+        padding-left: 10px;
+      }
+      button{
+        background-color: black;
+        color: white;
+        padding: 0px 30px 0px 30px;
+        border-radius: 0px 5px 5px 0px;
+        border: 1px solid white;
+      }
+      img{
+        width: 50px;
+        border-radius: 50%;
+      }
+      a{
+        text-decoration: none;
+        color: aliceblue;
+        opacity: 0.7;
+      }
+      a:hover{
+        color: aliceblue;
+        opacity: 0.7;
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid ms-md-5">
+        <a class="navbar-brand ms-md-5" href="#"><i class="fa-brands fa-github"></i><b class="ms-3">Github Finder</b></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+      <div class="collapse navbar-collapse me-md-5" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">HOME</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active me-md-5" aria-current="page" href="https://bspadhy1999.github.io/myportfolio.github.io/" target="_blank">ABOUT</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 mt-4">
+          <p>Let's stalk someone on Github</p>
+          <div class="search-section">
+            <input type="text" placeholder="Enter User name..." id="inputText" onkeyup="fninputText(event)">
+            <button onclick="getData()">GO</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container mt-3">
+      <div class="row" id="main">
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script>
+      var inputText=document.getElementById("inputText");
+      var main=document.getElementById("main");
+      function getData(){
+        main.innerHTML="";
+        if(inputText.value===""){
+          alert("Please enter User Name");
+          return;
+        }
+        let originalName=inputText.value.split(' ').join('').toLowerCase();
+        fetch(`https://api.github.com/search/users?q=${originalName}&page,per_page,sort,order`).then(function(res){
+          return res.json();
+        },function(err){
+          console.log("Error in fetching Api!");
+        }).then(function(actualData){
+          for (let i = 0; i < actualData.items.length; i++) {
+            main.innerHTML += `
+           <div class="col-md-3 mt-3 d-flex align-items-center">
+            <img class="m-2" src="${actualData.items[i].avatar_url}" alt="">
+            <p class="mt-2">${actualData.items[i].login} <br>  <a href="${actualData.items[i].html_url}" target="_blank">View Profile</a></p>
+           </div>
+           `;
+          }
+        },function(notgetData){
+          console.log("Problem in iterate data");
+        });
+      }
+      function fninputText(e){
+        if(inputText.value===""){
+          main.innerHTML="";
+        }
+      }
+    </script>
+  </body>
+</html>
